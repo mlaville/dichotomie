@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="utf-8" />
+	<title>dichotomie</title>
+	<meta content="marc laville - polinux" name="author" />
+	<meta content="dichotomie, polinux" name="keywords" />
+	<meta content="un jeu en javascript" name="description" />
+	<link rel="icon" href="favicon.ico" />
+	<link type="text/css" rel="stylesheet" href="./css/px-layout.css" />
+</head>
+<body>
+	<div id="corps">
+		<form action="#" name="jeu">
+		<fieldset><legend>jeu</legend>
+			<input name="difficult" value="Niveau" type="radio">facile<br>
+			<input name="difficult" value="difficile" type="radio">difficile<br>
+			<hr />
+			<input type="number" name="choix">
+			<input name="Entrer un nombre" type="button">
+		</fieldset>
+		<fieldset><legend>résultat</legend>
+			<textarea>
+			</textarea>
+		</fieldset>
+	</form>
+</div>
+	<header>
+		<a href="./"><img src="./img/signature.png" /></a>
+		<a href="#modal"><img src="./img/bulle.png" /></a>
+	  <h1>dichotomie</h1><h3>un jeu en javascript</h3>
+	</header>
+	<footer>
+	<a target="_blank" href="http://polinux.fr">
+		<img src="http://www.polinux.fr/img/polinux-micro.gif" alt="polinux.fr">
+	</a>
+	</footer>
+<script type="text/javascript">
+function jeu( formJeu, nbCoup, valMax ) {
+	var valSecret = Math.floor(Math.random() * valMax);
+		controlCoup = function( e ) {
+			var message = ( valeurJouee == valSecret )
+					? 'C\'est gagné !'
+					: ( valeurJouee > valSecret ) ? 'plus grand' : 'plus petit';
+					
+			return message;
+		};
+		
+	return { controlCoup : controlCoup };
+}
+		
+	window.addEventListener( 'load', function() {
+		var f = document.forms.jeu,
+			rd = f.difficult;
+			
+		rd.addEventListener( 'change', function() {
+		
+			return;
+		});
+	});
+
+</script>
+</body>
+</html>
