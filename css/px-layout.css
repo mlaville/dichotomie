@@ -31,7 +31,7 @@ header h3{
 }
 header a:first-child{
 	float:left;
-	margin-right: 18px;
+	margin: 4px;
 	font-size: 12px;
 }
 header a{

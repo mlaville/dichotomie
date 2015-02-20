@@ -12,21 +12,22 @@
 <body>
 	<div id="corps">
 		<form action="#" name="jeu">
-		<fieldset><legend>jeu</legend>
-			<input name="difficult" value="Niveau" type="radio">facile<br>
-			<input name="difficult" value="difficile" type="radio">difficile<br>
-			<hr />
-			<input type="number" name="choix">
-			<input name="Entrer un nombre" type="button">
-		</fieldset>
-		<fieldset><legend>résultat</legend>
-			<textarea>
-			</textarea>
-		</fieldset>
-	</form>
-</div>
+			<fieldset><legend>jeu</legend>
+					<input name="difficult" value="1" type="radio">facile<br>
+					<input name="difficult" value="2" type="radio">difficile<br>
+				<hr />
+				<input type="number" name="choix" />
+				<input type="button" name="validChoix" value="OK" />
+				<output name="reste"></output>
+			</fieldset>
+			<fieldset><legend>résultat</legend>
+				<textarea name="result">
+				</textarea>
+			</fieldset>
+		</form>
+	</div>
 	<header>
-		<a href="./"><img src="./img/signature.png" /></a>
+		<a href="./"><img src="http://polinux.fr/img/polinux-mini.jpg" /></a>
 		<a href="#modal"><img src="./img/bulle.png" /></a>
 	  <h1>dichotomie</h1><h3>un jeu en javascript</h3>
 	</header>
@@ -36,28 +37,102 @@
 	</a>
 	</footer>
 <script type="text/javascript">
-function jeu( formJeu, nbCoup, valMax ) {
-	var valSecret = Math.floor(Math.random() * valMax);
+
+var appDichotomie = (function ( formJeu ) {
+
+//function jeu( formJeu ) {
+	var valSecret,
+		rdNiveau = formJeu.difficult,
+		nbNiveau = rdNiveau.length,
+		disableSwitchNiveau = function( ) {
+			for( var i = nbNiveau - 1 ; i >= 0 ; i-- ) {
+				rdNiveau[i].disabled = !rdNiveau[i].disabled
+			};
+		},
+		initJeu = function( nbCoup, valMax ) {
+		
+			valSecret = Math.floor( Math.random() * valMax );
+			formJeu.result.value = '';
+			formJeu.reste.value = nbCoup;
+			
+			formJeu.choix.value = '';
+			formJeu.validChoix.disabled = false;
+			formJeu.choix.focus();
+		},
+		finJeu = function( ) {
+			disableSwitchNiveau();
+			formJeu.validChoix.disabled = true;
+		},
 		controlCoup = function( e ) {
-			var message = ( valeurJouee == valSecret )
-					? 'C\'est gagné !'
-					: ( valeurJouee > valSecret ) ? 'plus grand' : 'plus petit';
+			var valeurJouee = formJeu.choix.value,
+				message = '',
+				gagne = null;
+			
+			formJeu.reste.value--;
+			
+			if( valeurJouee == valSecret ) {
+				message = 'C\'est gagné !';
+				gagne = true;
+			} else {
+				message = ( valeurJouee > valSecret ) ? 'plus grand' : 'plus petit';
+				if(formJeu.reste.value > 0) {
+				} else {
+					gagne = false;
+				}
+			}
+			formJeu.result.value = formJeu.result.value + '\n' + valeurJouee + ' : ' + message;
+
+			formJeu.choix.value = '';
+			if(gagne != null) {
+				finJeu();
+			} else {
+			formJeu.choix.focus();
+			}
+			
+			return false;
+		}
+		
+		for( var i = nbNiveau - 1 ; i >= 0 ; i-- ) {
+			var rd = rdNiveau[i];
+			
+			rd.checked = false;
+			rd.disabled = false;
+			
+			rd.addEventListener( 'change', function() {
+				var niveau = rdNiveau.value;
+				
+				disableSwitchNiveau();
+				
+				alert(niveau);
+				
+				switch( parseInt(rdNiveau.value) ) {
+					case 1 : initJeu( 10, 100 );
+						break;
+					case 2 : initJeu( 7, 1000 );
+						break;
+					default : alert ( 'Choix Invalide' );
+						break;
+				}
+
+			});
+		}
+		formJeu.choix.addEventListener('keydown', function(evt) {
+			if (evt.keyCode  == 13) {
+				evt.preventDefault();
+				formJeu.validChoix.click();
+			}
+			return false;
+		});
 					
-			return message;
-		};
+		formJeu.validChoix.disabled = true;
+		formJeu.validChoix.addEventListener( 'click', controlCoup );
 		
 	return { controlCoup : controlCoup };
-}
+}) ( window.document.forms.jeu );
 		
-	window.addEventListener( 'load', function() {
-		var f = document.forms.jeu,
-			rd = f.difficult;
-			
-		rd.addEventListener( 'change', function() {
+window.addEventListener( 'load', function() {
 		
-			return;
-		});
-	});
+});
 
 </script>
 </body>
