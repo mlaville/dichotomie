@@ -8,21 +8,57 @@
 	<meta content="un jeu en javascript" name="description" />
 	<link rel="icon" href="favicon.ico" />
 	<link type="text/css" rel="stylesheet" href="./css/px-layout.css" />
+	<style>
+	body {
+		background: none repeat scroll 0 0 #f1f4f9;
+		color: #414a51;
+		font-family: "proxima-nova","Proxima Nova","Helvetica Neue",Helvetica,Arial,sans-serif;
+		font-size: 16px;
+		font-weight: 400;
+		line-height: 1.2;
+	}
+	#corps {
+		text-align: center;
+	}
+	fieldset {
+		display : inline;
+		text-align: left;
+	}
+	legend {
+		font-size: 1.2em;
+		font-weight: bold;
+		padding: 0 8px;
+	}
+	fieldset hr {
+		width: 240px;
+	}
+	input[type=number] {
+		width: 64px;
+	}
+	textarea {
+		height: 180px;
+	}
+	output:empty + span {
+		visibility: hidden;
+	}
+	</style>
 </head>
 <body>
 	<div id="corps">
+	<h5>d'après une idée de Jules Laville</h5>
 		<form action="#" name="jeu">
 			<fieldset><legend>jeu</legend>
-					<input name="difficult" value="1" type="radio">facile<br>
-					<input name="difficult" value="2" type="radio">difficile<br>
+				<label><input name="difficult" value="1" type="radio">facile</label><br />
+				<label><input name="difficult" value="2" type="radio">difficile</label>
 				<hr />
+				<output name="challenge"></output><br />
 				<input type="number" name="choix" />
 				<input type="button" name="validChoix" value="OK" />
-				<output name="reste"></output>
+				<hr />
+				<output name="reste"></output><span> coups à jouer</span>
 			</fieldset>
 			<fieldset><legend>résultat</legend>
-				<textarea name="result">
-				</textarea>
+				<textarea name="result" readonly></textarea>
 			</fieldset>
 		</form>
 	</div>
@@ -39,8 +75,6 @@
 <script type="text/javascript">
 
 var appDichotomie = (function ( formJeu ) {
-
-//function jeu( formJeu ) {
 	var valSecret,
 		rdNiveau = formJeu.difficult,
 		nbNiveau = rdNiveau.length,
@@ -52,16 +86,23 @@ var appDichotomie = (function ( formJeu ) {
 		initJeu = function( nbCoup, valMax ) {
 		
 			valSecret = Math.floor( Math.random() * valMax );
+			
+			formJeu.challenge.value = 'Trouver le nombre entre 1 et ' + valMax;
 			formJeu.result.value = '';
 			formJeu.reste.value = nbCoup;
 			
 			formJeu.choix.value = '';
 			formJeu.validChoix.disabled = false;
+			formJeu.choix.disabled = false;
 			formJeu.choix.focus();
 		},
 		finJeu = function( ) {
 			disableSwitchNiveau();
+			for( var i = nbNiveau - 1 ; i >= 0 ; i-- ) {
+				rdNiveau[i].checked = false;
+			};
 			formJeu.validChoix.disabled = true;
+			formJeu.choix.disabled = true;
 		},
 		controlCoup = function( e ) {
 			var valeurJouee = formJeu.choix.value,
@@ -75,65 +116,62 @@ var appDichotomie = (function ( formJeu ) {
 				gagne = true;
 			} else {
 				message = ( valeurJouee > valSecret ) ? 'plus grand' : 'plus petit';
-				if(formJeu.reste.value > 0) {
-				} else {
+				if(formJeu.reste.value <= 0) {
 					gagne = false;
+					message += '\nPerdu';
 				}
 			}
-			formJeu.result.value = formJeu.result.value + '\n' + valeurJouee + ' : ' + message;
+			formJeu.result.value = [ formJeu.result.value, valeurJouee + ' : ' + message ].join('\n');
 
 			formJeu.choix.value = '';
 			if(gagne != null) {
 				finJeu();
 			} else {
-			formJeu.choix.focus();
+				formJeu.choix.focus();
 			}
 			
 			return false;
 		}
 		
-		for( var i = nbNiveau - 1 ; i >= 0 ; i-- ) {
-			var rd = rdNiveau[i];
+	for( var i = nbNiveau - 1 ; i >= 0 ; i-- ) {
+		var rd = rdNiveau[i];
+		
+		rd.checked = false;
+		rd.disabled = false;
+		
+		rd.addEventListener( 'change', function() {
+			var niveau = rdNiveau.value;
 			
-			rd.checked = false;
-			rd.disabled = false;
-			
-			rd.addEventListener( 'change', function() {
-				var niveau = rdNiveau.value;
-				
-				disableSwitchNiveau();
-				
-				alert(niveau);
-				
-				switch( parseInt(rdNiveau.value) ) {
-					case 1 : initJeu( 10, 100 );
-						break;
-					case 2 : initJeu( 7, 1000 );
-						break;
-					default : alert ( 'Choix Invalide' );
-						break;
-				}
+			disableSwitchNiveau();
 
-			});
-		}
-		formJeu.choix.addEventListener('keydown', function(evt) {
-			if (evt.keyCode  == 13) {
-				evt.preventDefault();
-				formJeu.validChoix.click();
+			switch( parseInt(rdNiveau.value) ) {
+				case 1 : initJeu( 10, 100 );
+					break;
+				case 2 : initJeu( 7, 1000 );
+					break;
+				default : alert ( 'Choix Invalide' );
+					break;
 			}
-			return false;
+
 		});
-					
-		formJeu.validChoix.disabled = true;
-		formJeu.validChoix.addEventListener( 'click', controlCoup );
+	}
+	formJeu.choix.addEventListener('keydown', function(evt) {
+		if (evt.keyCode  == 13) {
+			evt.preventDefault();
+			formJeu.validChoix.click();
+		}
+		return false;
+	});
+	
+	formJeu.choix.value = '';
+	formJeu.result.value = '';
+	formJeu.result.value = '';
+	
+	formJeu.validChoix.disabled = true;
+	formJeu.validChoix.addEventListener( 'click', controlCoup );
 		
-	return { controlCoup : controlCoup };
+	return;
 }) ( window.document.forms.jeu );
-		
-window.addEventListener( 'load', function() {
-		
-});
-
 </script>
 </body>
 </html>
