@@ -6,7 +6,8 @@
 	<meta content="marc laville - polinux" name="author" />
 	<meta content="dichotomie, polinux" name="keywords" />
 	<meta content="un jeu en javascript" name="description" />
-	<link rel="icon" href="favicon.ico" />
+	<link rel="icon" href="/favicon.ico" />
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 	<link type="text/css" rel="stylesheet" href="./css/px-layout.css" />
 	<style>
 	body {
@@ -16,6 +17,7 @@
 		font-size: 16px;
 		font-weight: 400;
 		line-height: 1.2;
+		margin:0;
 	}
 	#corps {
 		text-align: center;
@@ -41,6 +43,11 @@
 	output:empty + span {
 		visibility: hidden;
 	}
+	i.fa {
+		background-color: #cc00ff;
+		font-size: 4em;
+		border-radius: .2em;
+	}
 	</style>
 </head>
 <body>
@@ -64,7 +71,12 @@
 	</div>
 	<header>
 		<a href="./"><img src="http://polinux.fr/img/polinux-mini.jpg" /></a>
-		<a href="#modal"><img src="./img/bulle.png" /></a>
+		<a href="http://codepen.io/polinux/pen/RNyPxR" target="_blank" alt="accèder aux sources">
+			<i class="fa fa-codepen"></i>
+		</a>
+		<a href="https://github.com/mlaville/dichotomie" target="_blank" alt="accèder aux sources">
+			<i class="fa fa-github"></i>
+		</a>
 	  <h1>dichotomie</h1><h3>un jeu en javascript</h3>
 	</header>
 	<footer>
@@ -74,7 +86,7 @@
 	</footer>
 <script type="text/javascript">
 
-var appDichotomie = (function ( formJeu ) {
+(function ( formJeu ) {
 	var valSecret,
 		rdNiveau = formJeu.difficult,
 		nbNiveau = rdNiveau.length,
@@ -132,7 +144,11 @@ var appDichotomie = (function ( formJeu ) {
 			
 			return false;
 		}
-		
+	
+	/**
+	 * Code executé au chargement de la page
+	 * prépare l'UI
+	 */
 	for( var i = nbNiveau - 1 ; i >= 0 ; i-- ) {
 		var rd = rdNiveau[i];
 		
@@ -164,7 +180,6 @@ var appDichotomie = (function ( formJeu ) {
 	});
 	
 	formJeu.choix.value = '';
-	formJeu.result.value = '';
 	formJeu.result.value = '';
 	
 	formJeu.validChoix.disabled = true;
