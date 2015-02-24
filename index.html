@@ -127,7 +127,7 @@
 				message = 'C\'est gagné !';
 				gagne = true;
 			} else {
-				message = ( valeurJouee > valSecret ) ? 'plus grand' : 'plus petit';
+				message = ( valeurJouee > valSecret ) ? 'trop grand' : 'trop petit';
 				if(formJeu.reste.value <= 0) {
 					gagne = false;
 					message += '\nPerdu';
